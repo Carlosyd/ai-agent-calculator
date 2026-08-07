@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  # Base de datos para guardar las métricas de los agentes
+  db:
+    image: postgres:15
+    container_name: agent_calculator_db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: agent_metrics
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  # Grafana para visualizar todo
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana_dashboard
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
